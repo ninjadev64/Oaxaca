@@ -9,10 +9,22 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 public class Main {
+    private static ServerSocket serverSocket = null;
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(25565);
+        serverSocket = new ServerSocket(25565);
+        connect();
+    }
+
+    public static void connect() throws IOException {
         while (true) {
             Socket socket = serverSocket.accept();
+            new Thread(() -> {
+                try {
+                    connect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start(); // Listen for a new connection on another thread
 
             InputStream input = socket.getInputStream();
             ByteBuffer buffer = ByteBuffer.wrap(input.readAllBytes());
