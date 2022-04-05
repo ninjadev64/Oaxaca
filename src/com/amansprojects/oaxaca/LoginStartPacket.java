@@ -8,6 +8,6 @@ public class LoginStartPacket extends Packet {
     public LoginStartPacket(byte[] d) {
         super(d);
         name = new String(Arrays.copyOfRange(d, 2, d.length));
-        System.out.println("Received a Login Start packet with name " + name);
+        Logger.log("Received a Login Start packet with name " + name);
     }
 }

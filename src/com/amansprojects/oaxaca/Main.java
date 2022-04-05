@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class Main {
     private static ServerSocket serverSocket = null;
     public static void main(String[] args) throws IOException {
+        Logger.log("Starting Oaxaca server...");
         serverSocket = new ServerSocket(25565);
         connect();
     }

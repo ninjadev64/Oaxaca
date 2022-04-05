@@ -17,6 +17,6 @@ public class HandshakePacket extends Packet {
         port = Byte.toUnsignedInt(d[3 + d[2]]) << 8 | Byte.toUnsignedInt(d[3 + d[2] + 1]);
         nextState = d[d.length - 1];
 
-        System.out.println("Received Handshake packet with protocol version " + protocolVersion + ", address " + address + ", port " + port + " and next state " + nextState);
+        Logger.log("Received Handshake packet with protocol version " + protocolVersion + ", address " + address + ", port " + port + " and next state " + nextState);
     }
 }
