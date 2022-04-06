@@ -27,7 +27,7 @@ public class PacketWriter {
     }
 
     public void writeString(String s) {
-        int stringLength = s.getBytes(StandardCharsets.US_ASCII).length;
+        int stringLength = s.getBytes(StandardCharsets.UTF_8).length;
         ByteBuffer buffer = ByteBuffer.allocate(Math.round((float)stringLength/128) + stringLength);
         ByteUtils.writeString(s, buffer);
         writeByteArray(buffer.array());

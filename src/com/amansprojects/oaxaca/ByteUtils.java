@@ -71,7 +71,7 @@ public class ByteUtils {
     // my code now
 
     public static void writeString(String value, ByteBuffer out) {
-        byte[] strBytes = value.getBytes(StandardCharsets.US_ASCII);
+        byte[] strBytes = value.getBytes(StandardCharsets.UTF_8);
         writeVarInt(strBytes.length, out);
         out.put(strBytes);
     }
