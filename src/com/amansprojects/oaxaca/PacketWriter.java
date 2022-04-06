@@ -35,9 +35,14 @@ public class PacketWriter {
 
     public byte[] finish() {
         byte[] contents = baos.toByteArray();
-        byte[] output = new byte[1 + contents.length]; // The final packet array
-        Logger.log(String.valueOf(contents.length));
-        System.arraycopy(new byte[]{(byte) contents.length}, 0, output, 0, 1);
+
+        int packetLengthVarIntSize = Math.round((float)contents.length/128);
+        byte[] output = new byte[packetLengthVarIntSize + contents.length]; // The final packet array
+
+        ByteBuffer lengthVarIntBuffer = ByteBuffer.allocate(packetLengthVarIntSize);
+        ByteUtils.writeVarInt(contents.length, lengthVarIntBuffer);
+
+        System.arraycopy(lengthVarIntBuffer.array(), 0, output, 0, 1);
         System.arraycopy(contents, 0, output, 1, contents.length);
         return output;
     }
