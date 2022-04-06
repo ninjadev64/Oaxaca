@@ -59,35 +59,16 @@ public class Main {
                     } else if (handshakeNextState == 1) {
                         new StatusPacket(packet);
 
-                        byte[] json = """
-{
-    "version": {
-        "name": "1.8.7",
-        "protocol": 47
-    },
-    "players": {
-        "max": 100,
-        "online": 5
-    },
-    "description": {
-        "text": "Hello world"
-    }
-}""".getBytes();
-                        ByteBuffer dataLengthOutBuffer = ByteBuffer.allocate(Math.round((float)(json.length + 1)/128)); // 128 is the max size of a single byte VarInt
-                        ByteUtils.writeVarInt(json.length + 1, dataLengthOutBuffer);  // Write the data length to a VarInt as it can be larger than 128
+                        String json = """
+{"version":{"name":"1.8.7","protocol":47},"players":{"max":100,"online":5},"description":{"text":"Hello world"}}""";
 
-                        byte[] dataLengthVarInt = dataLengthOutBuffer.array(); // Get the VarInt as it's multiple bytes
-                        byte[] metadata = new byte[dataLengthVarInt.length + 1]; // Create an array to hold the data length and packet ID
-                        System.arraycopy(dataLengthVarInt, 0, metadata, 0, dataLengthVarInt.length); // Merge the data length and packet ID
-                        metadata[metadata.length - 1] = 0;
+                        PacketWriter writer = new PacketWriter();
+                        writer.writeByte((byte) 0);
+                        writer.writeString(json);
 
-                        byte[] complete = new byte[json.length + metadata.length];
-                        System.arraycopy(metadata, 0, complete, 0, metadata.length);
-                        System.arraycopy(json, 0, complete, metadata.length, json.length);
-
-                        socket.getOutputStream().write(complete);
-
-                        for (byte b : complete) System.out.print(b + " "); // debug
+                        byte[] response = writer.finish();
+                        for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " "); // debug
+                        socket.getOutputStream().write(response);
                     } else if (handshakeNextState == 2) {
                         new LoginStartPacket(packet);
                     }

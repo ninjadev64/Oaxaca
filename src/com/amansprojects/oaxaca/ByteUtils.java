@@ -1,6 +1,7 @@
 package com.amansprojects.oaxaca;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class ByteUtils {
     // https://wiki.vg/Protocol#VarInt_and_VarLong
@@ -65,5 +66,13 @@ public class ByteUtils {
             // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
             value >>>= 7;
         }
+    }
+
+    // my code now
+
+    public static void writeString(String value, ByteBuffer out) {
+        byte[] strBytes = value.getBytes(StandardCharsets.US_ASCII);
+        writeVarInt(strBytes.length, out);
+        out.put(strBytes);
     }
 }
