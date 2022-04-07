@@ -91,17 +91,10 @@ public class Main {
                             }
                             case PLAY -> new ChatMessagePacket(dat);
                         }
-                    } case (0x02) -> {
-                        switch (state) {
-                            case PLAY -> new UseEntityPacket(dat);
-                        }
                     }
-                    case (0x03) -> {
-                        switch (state) {
-                            case PLAY -> new PlayerPacket(dat);
-                        }
-                    }
-                    case (0x04) -> new PlayerPositionPacket(dat); // There are only Play packets with IDs >= 0x04
+                    case (0x02) -> new UseEntityPacket(dat); // There are only Play server-bound packets with IDs >= 0x02
+                    case (0x03) -> new PlayerPacket(dat);
+                    case (0x04) -> new PlayerPositionPacket(dat);
                     default -> Logger.log("Unknown packet received with data " + Arrays.toString(dat));
                 }} catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("Packet did not contain valid packet ID");
