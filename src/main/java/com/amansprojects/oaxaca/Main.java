@@ -53,7 +53,7 @@ public class Main {
                             Map<String, Object> config = yaml.load(new FileInputStream("server.yml"));
                             statusResponsePacket.jsonResponse = new StatusResponsePacket.JsonResponse((int) config.get("maxPlayers"), 5, (ArrayList<String>) config.get("motd"));
                             String json = gson.toJson(statusResponsePacket.jsonResponse);
-                            System.out.println(json);
+                            Logger.log(json);
 
                             PacketWriter writer = new PacketWriter();
                             writer.writeByte((byte) 0);
@@ -68,7 +68,17 @@ public class Main {
                             new LoginStartPacket(dat);
                         }
                     } else if (dat[0] == 0x01) { // Ping packet, respond with pong
-                        socket.getOutputStream().write(new byte[]{2, 1, dat[1]});
+                        byte[] payload = new byte[dat.length - 1];
+                        System.arraycopy(dat, 1, payload, 0, dat.length - 1);
+                        byte[] metadata = new byte[]{(byte) (payload.length + 1), 1 };
+
+                        byte[] complete = new byte[payload.length + 2];
+                        System.arraycopy(metadata, 0, complete, 0, metadata.length);
+                        System.arraycopy(payload, 0, complete, metadata.length, payload.length);
+
+                        socket.getOutputStream().write(complete);
+                        Logger.log("Received a ping packet with payload " + Arrays.toString(payload));
+                        socket.close();
                     } else {
                         Logger.log("Unknown packet received with data " + Arrays.toString(dat));
                     }
