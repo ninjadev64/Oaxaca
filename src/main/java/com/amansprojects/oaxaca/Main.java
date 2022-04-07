@@ -51,7 +51,7 @@ public class Main {
 
                             Yaml yaml = new Yaml(); // Yaml is not thread-safe so a new instance is needed for every connection
                             Map<String, Object> config = yaml.load(new FileInputStream("server.yml"));
-                            statusResponsePacket.jsonResponse = new StatusResponsePacket.JsonResponse(100, 5, (ArrayList<String>) config.get("motd"));
+                            statusResponsePacket.jsonResponse = new StatusResponsePacket.JsonResponse((int) config.get("maxPlayers"), 5, (ArrayList<String>) config.get("motd"));
                             String json = gson.toJson(statusResponsePacket.jsonResponse);
                             System.out.println(json);
 

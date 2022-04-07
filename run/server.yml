@@ -1,3 +1,4 @@
 motd:
-  - "MOTD line 1"
-  - "MOTD line 2"
+  - "Test MOTD"
+  - "Oaxaca"
+maxPlayers: 128
