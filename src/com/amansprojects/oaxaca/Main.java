@@ -6,7 +6,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
@@ -21,66 +20,58 @@ public class Main {
     }
 
     public static void connect() throws IOException {
+        Socket socket = serverSocket.accept();
+        new Thread(() -> {
+            try { connect(); }
+            catch (IOException e) { e.printStackTrace(); }
+        }).start(); // Listen for a new connection on another thread
+
+        InputStream input = socket.getInputStream();
+        ByteBuffer buffer = ByteBuffer.wrap(input.readAllBytes());
+        int handshakeNextState = 0;
+
         while (true) {
-            Socket socket = serverSocket.accept();
-            new Thread(() -> {
-                try { connect(); }
-                catch (IOException e) { e.printStackTrace(); }
-            }).start(); // Listen for a new connection on another thread
-
-            InputStream input = socket.getInputStream();
-            ByteBuffer buffer = ByteBuffer.wrap(input.readAllBytes());
-            int handshakeNextState = 0;
-
-            ArrayList<byte[]> packets = new ArrayList<byte[]>();
-            while (true) {
-                int originalBufferIndex = buffer.position();
+            int originalBufferIndex = buffer.position();
+            try {
+                int length = ByteUtils.readVarInt(buffer);
+                byte[] dat = new byte[length];
+                buffer.get(dat, 0, length);
                 try {
-                    int length = buffer.get();
-                    byte[] dat = new byte[length];
-                    buffer.get(dat, 0, length);
-                    try {
-                        int packetId = dat[0];
-                        packets.add(dat);
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println("Packet did not contain valid packet ID");
-                        break;
+                    if (dat[0] == 0x00) {
+                        if (handshakeNextState == 0) {
+                            handshakeNextState = new HandshakePacket(dat).nextState;
+                        } else if (handshakeNextState == 1) {
+                            new StatusPacket(dat);
+
+                            String json = """
+{"version":{"name":"Oaxaca 1.8.8","protocol":47},"players":{"max":100,"online":5},"description":{"text":"Hello world"}}""";
+
+                            PacketWriter writer = new PacketWriter();
+                            writer.writeByte((byte) 0);
+                            writer.writeString(json);
+
+                            byte[] response = writer.finish();
+                            for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " "); // debug
+                            socket.getOutputStream().write(response);
+                        } else if (handshakeNextState == 2) {
+                            new LoginStartPacket(dat);
+                        }
+                    } else if (dat[0] == 0x01) { // Ping packet, respond with pong
+                        socket.getOutputStream().write(new byte[]{2, 1, dat[1]});
+                    } else {
+                        Logger.log("Unknown packet received with data " + Arrays.toString(dat));
                     }
-                } catch (BufferUnderflowException | NegativeArraySizeException e) {
-                    buffer.position(originalBufferIndex);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Packet did not contain valid packet ID");
                     break;
                 }
+            } catch (BufferUnderflowException | NegativeArraySizeException e) {
+                buffer.position(originalBufferIndex);
+                break;
             }
-
-            for (byte[] packet : packets) {
-                if (packet[0] == 0x00) {
-                    if (handshakeNextState == 0) {
-                        handshakeNextState = new HandshakePacket(packet).nextState;
-                    } else if (handshakeNextState == 1) {
-                        new StatusPacket(packet);
-
-                        String json = """
-{"version":{"name":"1.8.7","protocol":47},"players":{"max":100,"online":5},"description":{"text":"Hello world"}}""";
-
-                        PacketWriter writer = new PacketWriter();
-                        writer.writeByte((byte) 0);
-                        writer.writeString(json);
-
-                        byte[] response = writer.finish();
-                        for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " "); // debug
-                        socket.getOutputStream().write(response);
-                    } else if (handshakeNextState == 2) {
-                        new LoginStartPacket(packet);
-                    }
-                } else if (packet[0] == 0x01) { // Ping packet, respond with pong
-                    socket.getOutputStream().write(new byte[]{2, 1, packet[1]});
-                } else {
-                    Logger.log("Unknown packet received with data " + Arrays.toString(packet));
-                }
-            }
-
-            // OutputStream output = socket.getOutputStream();
-            socket.close();
         }
+
+        // OutputStream output = socket.getOutputStream();
+        socket.close();
     }
 }
