@@ -1,13 +1,13 @@
 package com.amansprojects.oaxaca.packets.inbound;
 
-import com.amansprojects.oaxaca.InboundPacket;
 import com.amansprojects.oaxaca.Logger;
 
 public class HandshakePacket extends InboundPacket {
-    public int protocolVersion;
-    public String address;
-    public int port;
-    public int nextState;
+    public final int protocolVersion;
+    public final String address;
+    public final int port;
+    public final int nextState;
+
     public HandshakePacket(byte[] d) {
         super(d);
 

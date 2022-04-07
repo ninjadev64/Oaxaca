@@ -1,8 +1,6 @@
 package com.amansprojects.oaxaca;
 
-import com.amansprojects.oaxaca.packets.inbound.HandshakePacket;
-import com.amansprojects.oaxaca.packets.inbound.LoginStartPacket;
-import com.amansprojects.oaxaca.packets.inbound.StatusRequestPacket;
+import com.amansprojects.oaxaca.packets.inbound.*;
 import com.amansprojects.oaxaca.packets.outbound.JoinGamePacket;
 import com.amansprojects.oaxaca.packets.outbound.LoginSuccessPacket;
 import com.amansprojects.oaxaca.packets.outbound.StatusResponsePacket;
@@ -49,7 +47,8 @@ public class Main {
                 byte[] dat = new byte[length];
                 input.read(dat);
                 try {
-                    if (dat[0] == 0x00) {
+                    switch (dat[0]) {
+                    case 0x00 -> { // bad indentation but overall it's more readable without one extra level
                         switch (state) {
                             case HANDSHAKING -> { // Client sent a handshake
                                 switch (new HandshakePacket(dat).nextState) {
@@ -74,9 +73,10 @@ public class Main {
                                 state = ConnectionState.PLAY;
                             }
                         }
-                    } else if (dat[0] == 0x01) { // Ping packet, respond with pong
+                    }
+                    case (0x01) -> {
                         switch (state) {
-                            case STATUS -> {
+                            case STATUS -> { // Ping packet, respond with pong
                                 byte[] payload = new byte[dat.length - 1];
                                 System.arraycopy(dat, 1, payload, 0, dat.length - 1);
                                 byte[] metadata = new byte[]{(byte) (payload.length + 1), 1};
@@ -89,11 +89,21 @@ public class Main {
                                 Logger.log("Received a ping packet with payload " + Arrays.toString(payload));
                                 socket.close();
                             }
+                            case PLAY -> new ChatMessagePacket(dat);
                         }
-                    } else {
-                        Logger.log("Unknown packet received with data " + Arrays.toString(dat));
+                    } case (0x02) -> {
+                        switch (state) {
+                            case PLAY -> new UseEntityPacket(dat);
+                        }
                     }
-                } catch (ArrayIndexOutOfBoundsException e) {
+                    case (0x03) -> {
+                        switch (state) {
+                            case PLAY -> new PlayerPacket(dat);
+                        }
+                    }
+                    case (0x04) -> new PlayerPositionPacket(dat); // There are only Play packets with IDs >= 0x04
+                    default -> Logger.log("Unknown packet received with data " + Arrays.toString(dat));
+                }} catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("Packet did not contain valid packet ID");
                     break;
                 }

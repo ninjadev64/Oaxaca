@@ -1,12 +1,11 @@
 package com.amansprojects.oaxaca.packets.inbound;
 
-import com.amansprojects.oaxaca.InboundPacket;
 import com.amansprojects.oaxaca.Logger;
 
 import java.util.Arrays;
 
 public class LoginStartPacket extends InboundPacket {
-    public String name;
+    public final String name;
 
     public LoginStartPacket(byte[] d) {
         super(d);

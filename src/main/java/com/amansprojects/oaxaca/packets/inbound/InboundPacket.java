@@ -1,7 +1,7 @@
-package com.amansprojects.oaxaca;
+package com.amansprojects.oaxaca.packets.inbound;
 
 public class InboundPacket {
-    public byte[] data;
+    public final byte[] data;
 
     public InboundPacket(byte[] d) {
         data = d;

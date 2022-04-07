@@ -1,7 +1,6 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
 import com.amansprojects.oaxaca.Main;
-import com.amansprojects.oaxaca.OutboundPacket;
 import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
