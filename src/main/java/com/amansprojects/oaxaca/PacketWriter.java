@@ -33,6 +33,11 @@ public class PacketWriter {
         writeByteArray(buffer.array());
     }
 
+    public void writeBoolean(boolean b) {
+        if (b) writeByte((byte) 1);
+        else writeByte((byte) 0);
+    }
+
     public byte[] finish() {
         byte[] contents = baos.toByteArray();
 
@@ -42,8 +47,8 @@ public class PacketWriter {
         ByteBuffer lengthVarIntBuffer = ByteBuffer.allocate(packetLengthVarIntSize);
         ByteUtils.writeVarInt(contents.length, lengthVarIntBuffer);
 
-        System.arraycopy(lengthVarIntBuffer.array(), 0, output, 0, 1);
-        System.arraycopy(contents, 0, output, 1, contents.length);
+        System.arraycopy(lengthVarIntBuffer.array(), 0, output, 0, packetLengthVarIntSize);
+        System.arraycopy(contents, 0, output, packetLengthVarIntSize, contents.length);
         return output;
     }
 }

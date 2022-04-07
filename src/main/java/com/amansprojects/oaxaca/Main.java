@@ -8,15 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.UUID;
 
 public class Main {
     private static ServerSocket serverSocket = null;
+    public static int _lastEntityID = 0;
     static final Gson gson = new Gson();
 
     public static void main(String[] args) throws IOException {
@@ -64,23 +62,8 @@ public class Main {
                             }
                             case LOGIN -> { // Client sent a Login Start packet, respond with a Login Success packet
                                 LoginStartPacket loginStartPacket = new LoginStartPacket(dat);
-
-                                PacketWriter writer = new PacketWriter();
-                                writer.writeByte((byte) 0x02);
-
-                                UUID uuid = UUID.nameUUIDFromBytes(loginStartPacket.name.getBytes(StandardCharsets.UTF_8));
-
-                                ByteBuffer uuidBuffer = ByteBuffer.allocate(16);
-                                uuidBuffer.putLong(uuid.getMostSignificantBits());
-                                uuidBuffer.putLong(uuid.getLeastSignificantBits());
-                                writer.writeByteArray(uuidBuffer.array());
-
-                                writer.writeString(loginStartPacket.name);
-
-                                byte[] response = writer.finish();
-                                for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " ");
-                                // socket.getOutputStream().write(writer.finish());
-                                socket.getOutputStream().write(response);
+                                new LoginSuccessPacket(loginStartPacket.name).send(socket);
+                                new JoinGamePacket(_lastEntityID + 1, (byte) 1, false, (byte) 0, (byte) 0, (byte) 100, "flat", false).send(socket);
                             }
                         }
                     } else if (dat[0] == 0x01) { // Ping packet, respond with pong

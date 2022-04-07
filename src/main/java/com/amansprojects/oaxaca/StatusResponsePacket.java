@@ -40,16 +40,11 @@ public class StatusResponsePacket implements OutboundPacket {
 
     public void send(Socket socket) throws IOException {
         String json = Main.gson.toJson(jsonResponse);
-        Logger.log(json);
 
         PacketWriter writer = new PacketWriter();
         writer.writeByte((byte) 0x00);
         writer.writeString(json);
 
-        byte[] response = writer.finish();
-        for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " "); // debug
-        System.out.println(); // new line
-
-        socket.getOutputStream().write(response);
+        socket.getOutputStream().write(writer.finish());
     }
 }
