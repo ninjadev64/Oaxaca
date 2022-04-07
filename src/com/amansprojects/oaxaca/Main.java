@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class Main {
@@ -27,15 +25,13 @@ public class Main {
         }).start(); // Listen for a new connection on another thread
 
         InputStream input = socket.getInputStream();
-        ByteBuffer buffer = ByteBuffer.wrap(input.readAllBytes());
         int handshakeNextState = 0;
 
         while (true) {
-            int originalBufferIndex = buffer.position();
             try {
-                int length = ByteUtils.readVarInt(buffer);
+                int length = input.read(); // TODO: read this as a VarInt
                 byte[] dat = new byte[length];
-                buffer.get(dat, 0, length);
+                input.read(dat);
                 try {
                     if (dat[0] == 0x00) {
                         if (handshakeNextState == 0) {
@@ -52,6 +48,8 @@ public class Main {
 
                             byte[] response = writer.finish();
                             for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " "); // debug
+                            System.out.println(); // new line
+
                             socket.getOutputStream().write(response);
                         } else if (handshakeNextState == 2) {
                             new LoginStartPacket(dat);
@@ -65,9 +63,10 @@ public class Main {
                     System.out.println("Packet did not contain valid packet ID");
                     break;
                 }
-            } catch (BufferUnderflowException | NegativeArraySizeException e) {
-                buffer.position(originalBufferIndex);
+            } catch (IOException e) {
                 break;
+            } catch (NegativeArraySizeException e) {
+                continue;
             }
         }
 
