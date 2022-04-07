@@ -1,9 +1,16 @@
 package com.amansprojects.oaxaca;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 
-public class StatusResponsePacket {
+public class StatusResponsePacket implements OutboundPacket {
     public JsonResponse jsonResponse;
+
+    public StatusResponsePacket(int maxPlayers, int onlinePlayers, ArrayList<String> description) {
+        jsonResponse = new JsonResponse(maxPlayers, onlinePlayers, description);
+    }
+
     public static class JsonResponse {
         public static class version {
             public String name = "Oaxaca 1.8.8";
@@ -12,7 +19,7 @@ public class StatusResponsePacket {
         public static class players {
             public int max;
             public int online;
-            public players(int m, int o) { max = m; online = o; };
+            public players(int m, int o) { max = m; online = o; }
         }
         public static class description {
             public String text;
@@ -29,5 +36,20 @@ public class StatusResponsePacket {
             players = new players(maxPlayers, onlinePlayers);
             this.description = new description(description);
         }
+    }
+
+    public void send(Socket socket) throws IOException {
+        String json = Main.gson.toJson(jsonResponse);
+        Logger.log(json);
+
+        PacketWriter writer = new PacketWriter();
+        writer.writeByte((byte) 0x00);
+        writer.writeString(json);
+
+        byte[] response = writer.finish();
+        for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " "); // debug
+        System.out.println(); // new line
+
+        socket.getOutputStream().write(response);
     }
 }

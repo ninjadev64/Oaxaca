@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class Main {
     private static ServerSocket serverSocket = null;
-    private static final Gson gson = new Gson();
+    static final Gson gson = new Gson();
 
     public static void main(String[] args) throws IOException {
         Logger.log("Starting Oaxaca server...");
@@ -52,28 +52,15 @@ public class Main {
                                     case 1 -> state = ConnectionState.STATUS;
                                     case 2 -> state = ConnectionState.LOGIN;
                                 }
-                                continue;
                             }
                             case STATUS -> { // Client sent a status request, respond with a status response
                                 new StatusRequestPacket(dat);
-                                StatusResponsePacket statusResponsePacket = new StatusResponsePacket();
 
                                 Yaml yaml = new Yaml(); // Yaml is not thread-safe so a new instance is needed for every connection
                                 Map<String, Object> config = yaml.load(new FileInputStream("server.yml"));
-                                statusResponsePacket.jsonResponse = new StatusResponsePacket.JsonResponse((int) config.get("maxPlayers"), 5, (ArrayList<String>) config.get("motd"));
-                                String json = gson.toJson(statusResponsePacket.jsonResponse);
-                                Logger.log(json);
+                                StatusResponsePacket statusResponsePacket = new StatusResponsePacket((int) config.get("maxPlayers"), 5, (ArrayList<String>) config.get("motd"));
 
-                                PacketWriter writer = new PacketWriter();
-                                writer.writeByte((byte) 0x00);
-                                writer.writeString(json);
-
-                                byte[] response = writer.finish();
-                                for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " "); // debug
-                                System.out.println(); // new line
-
-                                socket.getOutputStream().write(response);
-                                continue;
+                                statusResponsePacket.send(socket);
                             }
                             case LOGIN -> { // Client sent a Login Start packet, respond with a Login Success packet
                                 LoginStartPacket loginStartPacket = new LoginStartPacket(dat);
@@ -94,7 +81,6 @@ public class Main {
                                 for (byte b : response) System.out.print(Byte.toUnsignedInt(b) + " ");
                                 // socket.getOutputStream().write(writer.finish());
                                 socket.getOutputStream().write(response);
-                                continue;
                             }
                         }
                     } else if (dat[0] == 0x01) { // Ping packet, respond with pong
