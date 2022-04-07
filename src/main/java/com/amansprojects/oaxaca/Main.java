@@ -1,16 +1,28 @@
 package com.amansprojects.oaxaca;
 
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Main {
     private static ServerSocket serverSocket = null;
+    public static HashMap<String, Object> config;
+
     public static void main(String[] args) throws IOException {
         Logger.log("Starting Oaxaca server...");
         serverSocket = new ServerSocket(25565);
+
+        Yaml yaml = new Yaml();
+        InputStream configFile = new FileInputStream("server.yml");
+        config = yaml.load(configFile);
+        System.out.println(config.get("motd"));
+
         new Thread(() -> {
             try { connect(); }
             catch (IOException e) { e.printStackTrace(); }
