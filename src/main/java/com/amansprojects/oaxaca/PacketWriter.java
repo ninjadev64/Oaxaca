@@ -20,7 +20,7 @@ public class PacketWriter {
         }
     }
 
-    public void writeInt(int i) {
+    public void writeVarInt(int i) {
         ByteBuffer buffer = ByteBuffer.allocate(Math.round((float)i/128));
         ByteUtils.writeVarInt(i, buffer);
         writeByteArray(buffer.array());
