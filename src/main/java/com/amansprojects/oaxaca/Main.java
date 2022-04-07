@@ -64,6 +64,7 @@ public class Main {
                                 LoginStartPacket loginStartPacket = new LoginStartPacket(dat);
                                 new LoginSuccessPacket(loginStartPacket.name).send(socket);
                                 new JoinGamePacket(_lastEntityID + 1, (byte) 1, false, (byte) 0, (byte) 0, (byte) 100, "flat", false).send(socket);
+                                _lastEntityID+=1;
                             }
                         }
                     } else if (dat[0] == 0x01) { // Ping packet, respond with pong

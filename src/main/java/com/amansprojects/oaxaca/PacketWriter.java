@@ -38,6 +38,10 @@ public class PacketWriter {
         else writeByte((byte) 0);
     }
 
+    public void writeInt(int i) {
+        baos.write(i);
+    }
+
     public byte[] finish() {
         byte[] contents = baos.toByteArray();
 

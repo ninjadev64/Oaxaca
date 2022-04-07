@@ -2,6 +2,7 @@ package com.amansprojects.oaxaca;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 public class JoinGamePacket implements OutboundPacket {
     final int entityID;
@@ -33,11 +34,13 @@ public class JoinGamePacket implements OutboundPacket {
         } else {
             writer.writeByte((byte) (gamemode | 0x8));
         }
+        writer.writeByteArray(ByteBuffer.allocate(4).putInt(entityID).array());
         writer.writeByte(dimension);
         writer.writeByte(difficulty);
         writer.writeByte(maxPlayers);
         writer.writeString(levelType);
         writer.writeBoolean(reducedDebugInfo);
+
         socket.getOutputStream().write(writer.finish());
     }
 }
