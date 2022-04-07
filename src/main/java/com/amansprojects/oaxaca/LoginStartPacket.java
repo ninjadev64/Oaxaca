@@ -2,7 +2,7 @@ package com.amansprojects.oaxaca;
 
 import java.util.Arrays;
 
-public class LoginStartPacket extends Packet {
+public class LoginStartPacket extends InboundPacket {
     public String name;
 
     public LoginStartPacket(byte[] d) {

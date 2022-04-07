@@ -28,7 +28,7 @@ public class PacketWriter {
 
     public void writeString(String s) {
         int stringLength = s.getBytes(StandardCharsets.UTF_8).length;
-        ByteBuffer buffer = ByteBuffer.allocate(Math.round((float)stringLength/128) + stringLength);
+        ByteBuffer buffer = ByteBuffer.allocate((int) (Math.ceil((float)stringLength/128) + stringLength));
         ByteUtils.writeString(s, buffer);
         writeByteArray(buffer.array());
     }
@@ -36,7 +36,7 @@ public class PacketWriter {
     public byte[] finish() {
         byte[] contents = baos.toByteArray();
 
-        int packetLengthVarIntSize = Math.round((float)contents.length/128);
+        int packetLengthVarIntSize = (int) Math.ceil((float)contents.length/128);
         byte[] output = new byte[packetLengthVarIntSize + contents.length]; // The final packet array
 
         ByteBuffer lengthVarIntBuffer = ByteBuffer.allocate(packetLengthVarIntSize);

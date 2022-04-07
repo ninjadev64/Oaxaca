@@ -1,5 +1,6 @@
 package com.amansprojects.oaxaca;
 
+import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -7,21 +8,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
     private static ServerSocket serverSocket = null;
-    public static HashMap<String, Object> config;
+    private static final Gson gson = new Gson();
 
     public static void main(String[] args) throws IOException {
         Logger.log("Starting Oaxaca server...");
         serverSocket = new ServerSocket(25565);
-
-        Yaml yaml = new Yaml();
-        InputStream configFile = new FileInputStream("server.yml");
-        config = yaml.load(configFile);
-        System.out.println(config.get("motd"));
 
         new Thread(() -> {
             try { connect(); }
@@ -49,10 +46,14 @@ public class Main {
                         if (handshakeNextState == 0) {
                             handshakeNextState = new HandshakePacket(dat).nextState;
                         } else if (handshakeNextState == 1) {
-                            new StatusPacket(dat);
+                            new StatusRequestPacket(dat);
+                            StatusResponsePacket statusResponsePacket = new StatusResponsePacket();
 
-                            String json = """
-{"version":{"name":"Oaxaca 1.8.8","protocol":47},"players":{"max":100,"online":5},"description":{"text":"Hello world"}}""";
+                            Yaml yaml = new Yaml(); // Yaml is not thread-safe so a new instance is needed for every connection
+                            Map<String, Object> config = yaml.load(new FileInputStream("server.yml"));
+                            statusResponsePacket.jsonResponse = new StatusResponsePacket.JsonResponse(100, 5, (ArrayList<String>) config.get("motd"));
+                            String json = gson.toJson(statusResponsePacket.jsonResponse);
+                            System.out.println(json);
 
                             PacketWriter writer = new PacketWriter();
                             writer.writeByte((byte) 0);

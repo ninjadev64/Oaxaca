@@ -1,6 +1,6 @@
 package com.amansprojects.oaxaca;
 
-public class HandshakePacket extends Packet {
+public class HandshakePacket extends InboundPacket {
     public int protocolVersion;
     public String address;
     public int port;

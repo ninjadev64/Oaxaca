@@ -1,9 +1,9 @@
 package com.amansprojects.oaxaca;
 
-public class Packet {
+public class InboundPacket {
     public byte[] data;
 
-    public Packet(byte[] d) {
+    public InboundPacket(byte[] d) {
         data = d;
     }
 }
