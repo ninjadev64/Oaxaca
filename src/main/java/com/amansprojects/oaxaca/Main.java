@@ -1,5 +1,11 @@
 package com.amansprojects.oaxaca;
 
+import com.amansprojects.oaxaca.packets.inbound.HandshakePacket;
+import com.amansprojects.oaxaca.packets.inbound.LoginStartPacket;
+import com.amansprojects.oaxaca.packets.inbound.StatusRequestPacket;
+import com.amansprojects.oaxaca.packets.outbound.JoinGamePacket;
+import com.amansprojects.oaxaca.packets.outbound.LoginSuccessPacket;
+import com.amansprojects.oaxaca.packets.outbound.StatusResponsePacket;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 
@@ -15,7 +21,7 @@ import java.util.Map;
 public class Main {
     private static ServerSocket serverSocket = null;
     public static int _lastEntityID = 0;
-    static final Gson gson = new Gson();
+    public static final Gson gson = new Gson();
 
     public static void main(String[] args) throws IOException {
         Logger.log("Starting Oaxaca server...");
@@ -65,6 +71,7 @@ public class Main {
                                 new LoginSuccessPacket(loginStartPacket.name).send(socket);
                                 new JoinGamePacket(_lastEntityID + 1, (byte) 1, false, (byte) 0, (byte) 0, (byte) 100, "flat", false).send(socket);
                                 _lastEntityID+=1;
+                                state = ConnectionState.PLAY;
                             }
                         }
                     } else if (dat[0] == 0x01) { // Ping packet, respond with pong

@@ -1,4 +1,7 @@
-package com.amansprojects.oaxaca;
+package com.amansprojects.oaxaca.packets.inbound;
+
+import com.amansprojects.oaxaca.InboundPacket;
+import com.amansprojects.oaxaca.Logger;
 
 import java.util.Arrays;
 

@@ -1,4 +1,7 @@
-package com.amansprojects.oaxaca;
+package com.amansprojects.oaxaca.packets.outbound;
+
+import com.amansprojects.oaxaca.OutboundPacket;
+import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
 import java.net.Socket;
