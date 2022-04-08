@@ -52,7 +52,7 @@ public class Main {
             catch (IOException e) { e.printStackTrace(); }
         }).start(); // Listen for a new connection on another thread
 
-        Player player;
+        Player player = null;
         InputStream input = socket.getInputStream();
         ConnectionState state = ConnectionState.HANDSHAKING;
 
@@ -117,7 +117,14 @@ public class Main {
                                 Logger.log("Received a ping packet with payload " + Arrays.toString(payload));
                                 socket.close();
                             }
-                            case PLAY -> new ChatMessagePacket(dat);
+                            case PLAY -> {
+                                ChatMessagePacketIn inPacket = new ChatMessagePacketIn(dat);
+
+                                ChatObject object = new ChatObject();
+                                object.text = "<" + player.username + "> " + inPacket.string;
+
+                                new ChatMessagePacketOut(object, (byte) 0).send(socket);
+                            }
                         }
                     }
                     case (0x02) -> new UseEntityPacket(dat); // There are only Play server-bound packets with IDs >= 0x02
@@ -135,6 +142,10 @@ public class Main {
                 break;
             } catch (NegativeArraySizeException e) {
                 continue;
+            }
+            if (socket.isClosed() || !socket.isConnected()) {
+                socket.close();
+                players.remove(player);
             }
         }
 
