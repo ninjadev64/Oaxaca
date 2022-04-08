@@ -6,7 +6,7 @@ import com.amansprojects.oaxaca.PacketWriter;
 import java.io.IOException;
 import java.net.Socket;
 
-public class PlayerPositionAndLookPacket implements OutboundPacket {
+public class PlayerPositionAndLookPacketOut implements OutboundPacket {
     public double x;
     public double y;
     public double z;
@@ -14,7 +14,7 @@ public class PlayerPositionAndLookPacket implements OutboundPacket {
     public float pitch;
     public ConnectionState state = ConnectionState.PLAY;
 
-    public PlayerPositionAndLookPacket(double x, double y, double z, float yaw, float pitch) {
+    public PlayerPositionAndLookPacketOut(double x, double y, double z, float yaw, float pitch) {
         this.x = x;
         this.y = y;
         this.z = z;

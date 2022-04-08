@@ -75,4 +75,11 @@ public class ByteUtils {
         writeVarInt(strBytes.length, out);
         out.put(strBytes);
     }
+
+    public static Position getPosition(long l) {
+        double x = l >> 38;
+        double y = (l >> 26) & 0xFFF;
+        double z = l << 38 >> 38;
+        return new Position(x, y, z);
+    }
 }

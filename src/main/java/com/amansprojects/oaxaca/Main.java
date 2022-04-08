@@ -3,7 +3,7 @@ package com.amansprojects.oaxaca;
 import com.amansprojects.oaxaca.packets.inbound.*;
 import com.amansprojects.oaxaca.packets.outbound.JoinGamePacket;
 import com.amansprojects.oaxaca.packets.outbound.LoginSuccessPacket;
-import com.amansprojects.oaxaca.packets.outbound.PlayerPositionAndLookPacket;
+import com.amansprojects.oaxaca.packets.outbound.PlayerPositionAndLookPacketOut;
 import com.amansprojects.oaxaca.packets.outbound.StatusResponsePacket;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
@@ -74,7 +74,7 @@ public class Main {
                                 state = ConnectionState.PLAY;
 
                                 // Now send them Player Position and Look to get them past "Downloading terrain"
-                                new PlayerPositionAndLookPacket(0, 0, 0, 0, 0).send(socket);
+                                new PlayerPositionAndLookPacketOut(0, 0, 0, 0, 0).send(socket);
                             }
                         }
                     }
@@ -100,6 +100,8 @@ public class Main {
                     case (0x03) -> new PlayerPacket(dat);
                     case (0x04) -> new PlayerPositionPacket(dat);
                     case (0x05) -> new PlayerLookPacket(dat);
+                    case (0x06) -> new PlayerPositionAndLookPacketIn(dat);
+                    case (0x07) -> new PlayerDiggingPacket(dat);
                     default -> Logger.log("Unknown packet received with data " + Arrays.toString(dat));
                 }} catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("Packet did not contain valid packet ID");
