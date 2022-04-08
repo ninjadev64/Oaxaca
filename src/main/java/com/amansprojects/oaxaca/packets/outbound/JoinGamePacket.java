@@ -1,5 +1,6 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
+import com.amansprojects.oaxaca.ConnectionState;
 import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class JoinGamePacket implements OutboundPacket {
     final byte maxPlayers;
     final String levelType;
     final boolean reducedDebugInfo;
+    public ConnectionState state = ConnectionState.PLAY;
 
     public JoinGamePacket(int entityID, byte gamemode, boolean hardcore, byte dimension, byte difficulty, byte maxPlayers, String levelType, boolean reducedDebugInfo) {
         this.entityID = entityID;

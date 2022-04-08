@@ -1,5 +1,6 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
+import com.amansprojects.oaxaca.ConnectionState;
 import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
@@ -12,6 +13,7 @@ public class LoginSuccessPacket implements OutboundPacket {
     public LoginSuccessPacket(String name) {
         this.name = name;
     }
+    public ConnectionState state = ConnectionState.LOGIN;
 
     @Override
     public void send(Socket socket) throws IOException {

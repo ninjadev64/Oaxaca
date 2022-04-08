@@ -3,6 +3,7 @@ package com.amansprojects.oaxaca;
 import com.amansprojects.oaxaca.packets.inbound.*;
 import com.amansprojects.oaxaca.packets.outbound.JoinGamePacket;
 import com.amansprojects.oaxaca.packets.outbound.LoginSuccessPacket;
+import com.amansprojects.oaxaca.packets.outbound.PlayerPositionAndLookPacket;
 import com.amansprojects.oaxaca.packets.outbound.StatusResponsePacket;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
@@ -71,6 +72,9 @@ public class Main {
                                 new JoinGamePacket(_lastEntityID + 1, (byte) 1, false, (byte) 0, (byte) 0, (byte) 100, "flat", false).send(socket);
                                 _lastEntityID+=1;
                                 state = ConnectionState.PLAY;
+
+                                // Now send them Player Position and Look to get them past "Downloading terrain"
+                                new PlayerPositionAndLookPacket(0, 0, 0, 0, 0).send(socket);
                             }
                         }
                     }
@@ -95,6 +99,7 @@ public class Main {
                     case (0x02) -> new UseEntityPacket(dat); // There are only Play server-bound packets with IDs >= 0x02
                     case (0x03) -> new PlayerPacket(dat);
                     case (0x04) -> new PlayerPositionPacket(dat);
+                    case (0x05) -> new PlayerLookPacket(dat);
                     default -> Logger.log("Unknown packet received with data " + Arrays.toString(dat));
                 }} catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("Packet did not contain valid packet ID");

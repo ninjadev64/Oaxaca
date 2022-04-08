@@ -1,5 +1,6 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
+import com.amansprojects.oaxaca.ConnectionState;
 import com.amansprojects.oaxaca.Main;
 import com.amansprojects.oaxaca.PacketWriter;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 
 public class StatusResponsePacket implements OutboundPacket {
     public JsonResponse jsonResponse;
+    public ConnectionState state = ConnectionState.STATUS;
 
     public StatusResponsePacket(int maxPlayers, int onlinePlayers, ArrayList<String> description) {
         jsonResponse = new JsonResponse(maxPlayers, onlinePlayers, description);

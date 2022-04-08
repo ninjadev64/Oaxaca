@@ -1,12 +1,14 @@
 package com.amansprojects.oaxaca;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class PacketWriter {
     public ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    public DataOutputStream dos = new DataOutputStream(baos);
 
     public void writeByte(byte b) {
         baos.write(b);
@@ -34,12 +36,22 @@ public class PacketWriter {
     }
 
     public void writeBoolean(boolean b) {
-        if (b) writeByte((byte) 1);
-        else writeByte((byte) 0);
+        try { dos.writeBoolean(b); }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     public void writeInt(int i) {
         baos.write(i);
+    }
+
+    public void writeDouble(double d) {
+        try { dos.writeDouble(d); }
+        catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public void writeFloat(float f) {
+        try { dos.writeFloat(f); }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     public byte[] finish() {
