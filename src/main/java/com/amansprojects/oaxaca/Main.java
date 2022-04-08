@@ -1,10 +1,7 @@
 package com.amansprojects.oaxaca;
 
 import com.amansprojects.oaxaca.packets.inbound.*;
-import com.amansprojects.oaxaca.packets.outbound.JoinGamePacket;
-import com.amansprojects.oaxaca.packets.outbound.LoginSuccessPacket;
-import com.amansprojects.oaxaca.packets.outbound.PlayerPositionAndLookPacketOut;
-import com.amansprojects.oaxaca.packets.outbound.StatusResponsePacket;
+import com.amansprojects.oaxaca.packets.outbound.*;
 import com.google.gson.Gson;
 import org.yaml.snakeyaml.Yaml;
 
@@ -13,14 +10,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class Main {
     private static ServerSocket serverSocket = null;
     public static int _lastEntityID = 0;
     public static final Gson gson = new Gson();
+    public static ArrayList<Player> players = new ArrayList<Player>();
 
     public static void main(String[] args) throws IOException {
         Logger.log("Starting Oaxaca server...");
@@ -30,6 +27,22 @@ public class Main {
             try { connect(); }
             catch (IOException e) { e.printStackTrace(); }
         }).start();
+
+        TimerTask keepAliveTask = new TimerTask() {
+            @Override
+            public void run() {
+                for (Player player : players) {
+                    if (player.socket.isClosed() || !player.socket.isConnected()) players.remove(player);
+                    try { new KeepAlivePacket().send(player.socket); }
+                    catch (IOException e) {
+                        try { player.socket.close(); }
+                        catch (IOException ex) { ex.printStackTrace(); }
+                    }
+                }
+            }
+        };
+        Timer timer = new Timer("KeepAlive");
+        timer.scheduleAtFixedRate(keepAliveTask, 0, 10000);
     }
 
     public static void connect() throws IOException {
@@ -39,6 +52,7 @@ public class Main {
             catch (IOException e) { e.printStackTrace(); }
         }).start(); // Listen for a new connection on another thread
 
+        Player player;
         InputStream input = socket.getInputStream();
         ConnectionState state = ConnectionState.HANDSHAKING;
 
@@ -68,14 +82,24 @@ public class Main {
                             }
                             case LOGIN -> { // Client sent a Login Start packet, respond with a Login Success packet
                                 LoginStartPacket loginStartPacket = new LoginStartPacket(dat);
-                                new LoginSuccessPacket(loginStartPacket.name).send(socket);
-                                new JoinGamePacket(_lastEntityID + 1, (byte) 1, false, (byte) 0, (byte) 0, (byte) 100, "flat", false).send(socket);
+
                                 _lastEntityID+=1;
+                                player = new Player(
+                                    socket,
+                                    loginStartPacket.name,
+                                    UUID.nameUUIDFromBytes(("OfflinePlayer:" + loginStartPacket.name).getBytes(StandardCharsets.UTF_8)),
+                                    _lastEntityID
+                                );
+                                players.add(player);
+
+                                new LoginSuccessPacket(player.username, player.uuid).send(socket);
+                                new JoinGamePacket(player.eid, (byte) 1, false, (byte) 0, (byte) 0, (byte) 100, "flat", false).send(socket);
                                 state = ConnectionState.PLAY;
 
                                 // Now send them Player Position and Look to get them past "Downloading terrain"
                                 new PlayerPositionAndLookPacketOut(0, 0, 0, 0, 0).send(socket);
                             }
+                            case PLAY -> Logger.log("Received a Keep Alive Response packet with data " + Arrays.toString(dat));
                         }
                     }
                     case (0x01) -> {

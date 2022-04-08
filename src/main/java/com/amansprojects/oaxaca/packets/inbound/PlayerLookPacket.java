@@ -10,8 +10,7 @@ public class PlayerLookPacket extends InboundPacket {
 
     public PlayerLookPacket(byte[] d) {
         super(d);
-        ByteBuffer packetBuffer = ByteBuffer.wrap(d);
-        packetBuffer.position(1);
+        ByteBuffer packetBuffer = ByteBuffer.wrap(d); packetBuffer.position(1);
         yaw = packetBuffer.getFloat();
         pitch = packetBuffer.getFloat();
         Logger.log("Received a Player Look packet with yaw " + yaw + " and pitch " + pitch);

@@ -11,8 +11,7 @@ public class PlayerPositionPacket extends InboundPacket {
 
     public PlayerPositionPacket(byte[] d) {
         super(d);
-        ByteBuffer packetBuffer = ByteBuffer.wrap(d);
-        packetBuffer.position(1);
+        ByteBuffer packetBuffer = ByteBuffer.wrap(d); packetBuffer.position(1);
         x = packetBuffer.getDouble();
         feetY = packetBuffer.getDouble();
         z = packetBuffer.getDouble();

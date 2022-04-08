@@ -5,13 +5,14 @@ import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class LoginSuccessPacket implements OutboundPacket {
     final String name;
-    public LoginSuccessPacket(String name) {
+    final UUID uuid;
+    public LoginSuccessPacket(String name, UUID uuid) {
         this.name = name;
+        this.uuid = uuid;
     }
     public ConnectionState state = ConnectionState.LOGIN;
 
@@ -20,7 +21,7 @@ public class LoginSuccessPacket implements OutboundPacket {
         PacketWriter writer = new PacketWriter();
         writer.writeByte((byte) 0x02);
 
-        writer.writeString(UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(StandardCharsets.UTF_8)).toString());
+        writer.writeString(uuid.toString());
         writer.writeString(name);
 
         socket.getOutputStream().write(writer.finish());
