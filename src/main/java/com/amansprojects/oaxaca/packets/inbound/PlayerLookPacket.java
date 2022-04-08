@@ -1,7 +1,5 @@
 package com.amansprojects.oaxaca.packets.inbound;
 
-import com.amansprojects.oaxaca.Logger;
-
 import java.nio.ByteBuffer;
 
 public class PlayerLookPacket extends InboundPacket {
@@ -13,6 +11,6 @@ public class PlayerLookPacket extends InboundPacket {
         ByteBuffer packetBuffer = ByteBuffer.wrap(d); packetBuffer.position(1);
         yaw = packetBuffer.getFloat();
         pitch = packetBuffer.getFloat();
-        Logger.log("Received a Player Look packet with yaw " + yaw + " and pitch " + pitch);
+        // Logger.log("Received a Player Look packet with yaw " + yaw + " and pitch " + pitch);
     }
 }

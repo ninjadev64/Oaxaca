@@ -34,7 +34,7 @@ public class Main {
                 for (Player player : players) {
                     if (player.socket.isClosed() || !player.socket.isConnected()) players.remove(player);
                     try { new KeepAlivePacket().send(player.socket); }
-                    catch (IOException e) {
+                    catch (IOException | ConcurrentModificationException e) {
                         try { player.socket.close(); }
                         catch (IOException ex) { ex.printStackTrace(); }
                     }
@@ -123,7 +123,7 @@ public class Main {
                                 ChatObject object = new ChatObject();
                                 object.text = "<" + player.username + "> " + inPacket.string;
 
-                                new ChatMessagePacketOut(object, (byte) 0).send(socket);
+                                for (Player p : players) new ChatMessagePacketOut(object, (byte) 0).send(p.socket);
                             }
                         }
                     }

@@ -1,7 +1,5 @@
 package com.amansprojects.oaxaca.packets.inbound;
 
-import com.amansprojects.oaxaca.Logger;
-
 import java.nio.ByteBuffer;
 
 public class PlayerPositionPacket extends InboundPacket {
@@ -15,6 +13,6 @@ public class PlayerPositionPacket extends InboundPacket {
         x = packetBuffer.getDouble();
         feetY = packetBuffer.getDouble();
         z = packetBuffer.getDouble();
-        Logger.log("Received a Player Position packet with x " + x + ", feet y " + feetY + " and z " + z);
+        // Logger.log("Received a Player Position packet with x " + x + ", feet y " + feetY + " and z " + z);
     }
 }
