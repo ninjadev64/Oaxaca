@@ -1,5 +1,7 @@
 package com.amansprojects.oaxaca;
 
+import com.amansprojects.oaxaca.packets.outbound.KeepAlivePacket;
+
 import java.net.Socket;
 import java.util.UUID;
 
@@ -11,6 +13,8 @@ public class Player {
 
     public Gamemode gamemode;
     public Position position;
+
+    public KeepAlivePacket lastSentKeepAlive;
 
     public Player(Socket socket, String username, UUID uuid, int eid, Gamemode gamemode, Position position) {
         this.socket = socket;

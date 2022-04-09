@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -33,7 +34,11 @@ public class Main {
             public void run() {
                 for (Player player : players) {
                     if (player.socket.isClosed() || !player.socket.isConnected()) players.remove(player);
-                    try { new KeepAlivePacket().send(player.socket); }
+                    try {
+                        KeepAlivePacket packet = new KeepAlivePacket();
+                        packet.send(player.socket);
+                        player.lastSentKeepAlive = packet;
+                    }
                     catch (IOException e) {
                         try { player.socket.close(); }
                         catch (IOException ex) { ex.printStackTrace(); }
@@ -102,7 +107,13 @@ public class Main {
                                 // Now send them Player Position and Look to get them past "Downloading terrain"
                                 new PlayerPositionAndLookPacketOut(player.position).send(socket);
                             }
-                            case PLAY -> Logger.log("Received a Keep Alive Response packet with data " + Arrays.toString(dat));
+                            case PLAY -> {
+                                int data = ByteBuffer.wrap(dat).position(1).get();
+                                if (player.lastSentKeepAlive.data != data) {
+                                    player.socket.close(); // the client did not return the same keepalive data sent by the server
+                                }
+                                Logger.log("Received a Keep Alive Response packet with data " + data);
+                            }
                         }
                     }
                     case (0x01) -> {

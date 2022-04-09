@@ -8,11 +8,15 @@ import java.net.Socket;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class KeepAlivePacket implements OutboundPacket {
+    public final int data;
+    public KeepAlivePacket() { data = ThreadLocalRandom.current().nextInt(129); }
+
     @Override
     public void send(Socket socket) throws IOException {
         PacketWriter writer = new PacketWriter();
+
         writer.writeByte((byte) 0x00);
-        writer.writeInt(ThreadLocalRandom.current().nextInt(129));
+        writer.writeInt(data);
 
         Main.socketWrite(socket, writer.finish());
     }
