@@ -1,23 +1,17 @@
 package com.amansprojects.oaxaca.packets.inbound;
 
+import com.amansprojects.oaxaca.Position;
+
 import java.nio.ByteBuffer;
 
 public class PlayerPositionAndLookPacketIn extends InboundPacket {
-    public final double x;
-    public final double y;
-    public final double z;
-    public final float yaw;
-    public final float pitch;
+    public Position position;
     public final boolean onGround;
 
     public PlayerPositionAndLookPacketIn(byte[] d) {
         super(d);
         ByteBuffer packetBuffer = ByteBuffer.wrap(d); packetBuffer.position(1);
-        x = packetBuffer.getDouble();
-        y = packetBuffer.getDouble();
-        z = packetBuffer.getDouble();
-        yaw = packetBuffer.getFloat();
-        pitch = packetBuffer.getFloat();
+        position = new Position(packetBuffer.getDouble(), packetBuffer.getDouble(), packetBuffer.getDouble(), packetBuffer.getFloat(), packetBuffer.getFloat());
         byte oG = packetBuffer.get();
         onGround = oG >= 1;
     }

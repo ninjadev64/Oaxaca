@@ -45,6 +45,7 @@ public class Main {
         timer.scheduleAtFixedRate(keepAliveTask, 0, 10000);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void connect() throws IOException {
         Socket socket = serverSocket.accept();
         new Thread(() -> {
@@ -131,9 +132,12 @@ public class Main {
                     }
                     case (0x02) -> new UseEntityPacket(dat); // There are only Play server-bound packets with IDs >= 0x02
                     case (0x03) -> new PlayerPacket(dat);
-                    case (0x04) -> new PlayerPositionPacket(dat);
-                    case (0x05) -> new PlayerLookPacket(dat);
-                    case (0x06) -> new PlayerPositionAndLookPacketIn(dat);
+                    case (0x04) -> player.position = new PlayerPositionPacket(dat).position;
+                    case (0x05) -> {
+                        PlayerLookPacket packet = new PlayerLookPacket(dat);
+                        player.position.yaw = packet.yaw; player.position.pitch = packet.pitch;
+                    }
+                    case (0x06) -> player.position = new PlayerPositionAndLookPacketIn(dat).position;
                     case (0x07) -> new PlayerDiggingPacket(dat);
                     default -> Logger.log("Unknown packet received with data " + Arrays.toString(dat));
                 }} catch (ArrayIndexOutOfBoundsException e) {
