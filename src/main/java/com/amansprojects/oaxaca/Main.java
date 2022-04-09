@@ -88,16 +88,18 @@ public class Main {
                                     socket,
                                     loginStartPacket.name,
                                     UUID.nameUUIDFromBytes(("OfflinePlayer:" + loginStartPacket.name).getBytes(StandardCharsets.UTF_8)),
-                                    _lastEntityID
+                                    _lastEntityID,
+                                    Gamemode.CREATIVE,
+                                    new Position(0, 0, 0, 0, 0)
                                 );
                                 players.add(player);
 
                                 new LoginSuccessPacket(player.username, player.uuid).send(socket);
-                                new JoinGamePacket(player.eid, (byte) 1, false, (byte) 0, (byte) 0, (byte) 100, "flat", false).send(socket);
+                                new JoinGamePacket(player.eid, player.gamemode, (byte) 0, (byte) 0, (byte) 100, "flat", false).send(socket);
                                 state = ConnectionState.PLAY;
 
                                 // Now send them Player Position and Look to get them past "Downloading terrain"
-                                new PlayerPositionAndLookPacketOut(0, 0, 0, 0, 0).send(socket);
+                                new PlayerPositionAndLookPacketOut(player.position).send(socket);
                             }
                             case PLAY -> Logger.log("Received a Keep Alive Response packet with data " + Arrays.toString(dat));
                         }

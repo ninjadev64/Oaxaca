@@ -3,35 +3,32 @@ package com.amansprojects.oaxaca.packets.outbound;
 import com.amansprojects.oaxaca.ConnectionState;
 import com.amansprojects.oaxaca.Main;
 import com.amansprojects.oaxaca.PacketWriter;
+import com.amansprojects.oaxaca.Position;
 
 import java.io.IOException;
 import java.net.Socket;
 
 public class PlayerPositionAndLookPacketOut implements OutboundPacket {
-    public double x;
-    public double y;
-    public double z;
-    public float yaw;
-    public float pitch;
+    public Position position;
     public ConnectionState state = ConnectionState.PLAY;
 
     public PlayerPositionAndLookPacketOut(double x, double y, double z, float yaw, float pitch) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.yaw = yaw;
-        this.pitch = pitch;
+        this.position = new Position(x, y, z, yaw, pitch);
+    }
+
+    public PlayerPositionAndLookPacketOut(Position position) {
+        this.position = position;
     }
 
     @Override
     public void send(Socket socket) throws IOException {
         PacketWriter writer = new PacketWriter();
         writer.writeByte((byte) 0x08);
-        writer.writeDouble(x);
-        writer.writeDouble(y);
-        writer.writeDouble(z);
-        writer.writeFloat(yaw);
-        writer.writeFloat(pitch);
+        writer.writeDouble(position.x);
+        writer.writeDouble(position.y);
+        writer.writeDouble(position.z);
+        writer.writeFloat(position.yaw);
+        writer.writeFloat(position.pitch);
         writer.writeByte((byte) 0x00); // flags field is unused in this server implementation
         Main.socketWrite(socket, writer.finish());
     }
