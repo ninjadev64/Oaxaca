@@ -13,12 +13,13 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Main {
     private static ServerSocket serverSocket = null;
     public static int _lastEntityID = 0;
     public static final Gson gson = new Gson();
-    public static ArrayList<Player> players = new ArrayList<Player>();
+    public static CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();
 
     public static void main(String[] args) throws IOException {
         Logger.log("Starting Oaxaca server...");
@@ -32,7 +33,8 @@ public class Main {
         TimerTask keepAliveTask = new TimerTask() {
             @Override
             public void run() {
-                for (Player player : players) {
+                for (ListIterator<Player> it = players.listIterator(); it.hasNext(); ) {
+                    Player player = it.next();
                     if (player.socket.isClosed() || !player.socket.isConnected()) players.remove(player);
                     try {
                         KeepAlivePacket packet = new KeepAlivePacket();
