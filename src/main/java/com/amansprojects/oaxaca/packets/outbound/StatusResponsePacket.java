@@ -50,6 +50,6 @@ public class StatusResponsePacket implements OutboundPacket {
         writer.writeByte((byte) 0x00);
         writer.writeString(json);
 
-        socket.getOutputStream().write(writer.finish());
+        Main.socketWrite(socket, writer.finish());
     }
 }

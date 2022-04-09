@@ -1,5 +1,6 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
+import com.amansprojects.oaxaca.Main;
 import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
@@ -13,6 +14,6 @@ public class KeepAlivePacket implements OutboundPacket {
         writer.writeByte((byte) 0x00);
         writer.writeInt(ThreadLocalRandom.current().nextInt(129));
 
-        socket.getOutputStream().write(writer.finish());
+        Main.socketWrite(socket, writer.finish());
     }
 }

@@ -1,6 +1,7 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
 import com.amansprojects.oaxaca.ConnectionState;
+import com.amansprojects.oaxaca.Main;
 import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
@@ -24,6 +25,6 @@ public class LoginSuccessPacket implements OutboundPacket {
         writer.writeString(uuid.toString());
         writer.writeString(name);
 
-        socket.getOutputStream().write(writer.finish());
+        Main.socketWrite(socket, writer.finish());
     }
 }

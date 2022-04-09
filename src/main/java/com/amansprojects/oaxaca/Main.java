@@ -34,7 +34,7 @@ public class Main {
                 for (Player player : players) {
                     if (player.socket.isClosed() || !player.socket.isConnected()) players.remove(player);
                     try { new KeepAlivePacket().send(player.socket); }
-                    catch (IOException | ConcurrentModificationException e) {
+                    catch (IOException e) {
                         try { player.socket.close(); }
                         catch (IOException ex) { ex.printStackTrace(); }
                     }
@@ -113,7 +113,7 @@ public class Main {
                                 System.arraycopy(metadata, 0, complete, 0, metadata.length);
                                 System.arraycopy(payload, 0, complete, metadata.length, payload.length);
 
-                                socket.getOutputStream().write(complete);
+                                socketWrite(socket, complete);
                                 Logger.log("Received a ping packet with payload " + Arrays.toString(payload));
                                 socket.close();
                             }
@@ -151,5 +151,9 @@ public class Main {
 
         // OutputStream output = socket.getOutputStream();
         socket.close();
+    }
+
+    public static synchronized void socketWrite(Socket socket, byte[] data) throws IOException {
+        socket.getOutputStream().write(data);
     }
 }

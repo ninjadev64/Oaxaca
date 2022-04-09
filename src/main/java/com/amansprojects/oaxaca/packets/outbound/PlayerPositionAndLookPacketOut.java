@@ -1,6 +1,7 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
 import com.amansprojects.oaxaca.ConnectionState;
+import com.amansprojects.oaxaca.Main;
 import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
@@ -32,6 +33,6 @@ public class PlayerPositionAndLookPacketOut implements OutboundPacket {
         writer.writeFloat(yaw);
         writer.writeFloat(pitch);
         writer.writeByte((byte) 0x00); // flags field is unused in this server implementation
-        socket.getOutputStream().write(writer.finish());
+        Main.socketWrite(socket, writer.finish());
     }
 }

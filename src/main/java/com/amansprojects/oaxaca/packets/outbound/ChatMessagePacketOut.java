@@ -1,6 +1,7 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
 import com.amansprojects.oaxaca.ChatObject;
+import com.amansprojects.oaxaca.Main;
 import com.amansprojects.oaxaca.PacketWriter;
 import com.google.gson.Gson;
 
@@ -22,6 +23,6 @@ public class ChatMessagePacketOut implements OutboundPacket {
         writer.writeByte((byte) 0x02);
         writer.writeString(new Gson().toJson(contents));
         writer.writeByte(position);
-        socket.getOutputStream().write(writer.finish());
+        Main.socketWrite(socket, writer.finish());
     }
 }

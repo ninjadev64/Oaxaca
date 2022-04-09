@@ -1,6 +1,7 @@
 package com.amansprojects.oaxaca.packets.outbound;
 
 import com.amansprojects.oaxaca.ConnectionState;
+import com.amansprojects.oaxaca.Main;
 import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
@@ -45,6 +46,6 @@ public class JoinGamePacket implements OutboundPacket {
         writer.writeString(levelType);
         writer.writeBoolean(reducedDebugInfo);
 
-        socket.getOutputStream().write(writer.finish());
+        Main.socketWrite(socket, writer.finish());
     }
 }
