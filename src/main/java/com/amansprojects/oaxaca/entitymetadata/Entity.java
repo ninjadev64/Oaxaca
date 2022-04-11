@@ -39,7 +39,7 @@ public class Entity {
         this.noGravity = noGravity;
     }
 
-    public byte getBitMask() {
+    public byte getStatusBitMask() {
         byte value = 0;
         if (onFire) value = (byte) (value | 0x01);
         if (crouching) value = (byte) (value | 0x02);
