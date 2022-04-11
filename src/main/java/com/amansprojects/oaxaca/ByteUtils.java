@@ -98,4 +98,8 @@ public class ByteUtils {
         double z = l << 38 >> 38;
         return new Position(x, y, z);
     }
+
+    public static float getAngle(float o360) {
+        return ((360/o360)*256);
+    }
 }

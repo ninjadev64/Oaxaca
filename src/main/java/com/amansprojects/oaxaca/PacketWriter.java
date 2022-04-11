@@ -54,6 +54,11 @@ public class PacketWriter {
         catch (IOException e) { e.printStackTrace(); }
     }
 
+    public void writeShort(short s) {
+        try { dos.writeShort(s); }
+        catch (IOException e) { e.printStackTrace(); }
+    }
+
     public byte[] finish() {
         byte[] contents = baos.toByteArray();
 
