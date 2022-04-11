@@ -1,5 +1,6 @@
 package com.amansprojects.oaxaca;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -66,6 +67,21 @@ public class ByteUtils {
             // Note: >>> means that the sign bit is shifted with the rest of the number rather than being left alone
             value >>>= 7;
         }
+    }
+
+    // Defective on Discord
+    public static int checkVarIntSize(final int v) {
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        int value = v;
+        do {
+            byte temp = (byte) (value & 0b01111111);
+            value >>>= 7;
+            if (value != 0) {
+                temp |= 0b10000000;
+            }
+            bos.write(temp);
+        } while (value != 0);
+        return bos.size();
     }
 
     // my code now

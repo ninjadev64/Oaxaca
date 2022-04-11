@@ -33,17 +33,18 @@ public class Main {
         TimerTask keepAliveTask = new TimerTask() {
             @Override
             public void run() {
-                for (ListIterator<Player> it = players.listIterator(); it.hasNext(); ) {
-                    Player player = it.next();
-                    if (player.socket.isClosed() || !player.socket.isConnected()) players.remove(player);
+                for (Player player : players) {
                     try {
+                        if (player.socket.isClosed() || !player.socket.isConnected()) { API.removePlayer(player); continue; }
                         KeepAlivePacket packet = new KeepAlivePacket();
                         packet.send(player.socket);
                         player.lastSentKeepAlive = packet;
-                    }
-                    catch (IOException e) {
-                        try { player.socket.close(); }
-                        catch (IOException ex) { ex.printStackTrace(); }
+                    } catch (IOException e) {
+                        try {
+                            API.removePlayer(player);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
             }
@@ -108,6 +109,15 @@ public class Main {
 
                                 // Now send them Player Position and Look to get them past "Downloading terrain"
                                 new PlayerPositionAndLookPacketOut(player.position).send(socket);
+
+                                // Update everyone's player list
+                                for (Player p : players) new PlayerListItemPacket(players).send(p.socket);
+
+                                // Send "joined the game" message
+                                ChatObject joined = new ChatObject();
+                                joined.text = player.username + " joined the game";
+                                joined.color = "yellow";
+                                API.broadcastMessage(joined);
                             }
                             case PLAY -> {
                                 int data = ByteBuffer.wrap(dat).position(1).get();
@@ -139,7 +149,7 @@ public class Main {
                                 ChatObject object = new ChatObject();
                                 object.text = "<" + player.username + "> " + inPacket.string;
 
-                                for (Player p : players) new ChatMessagePacketOut(object, (byte) 0).send(p.socket);
+                                API.broadcastMessage(object);
                             }
                         }
                     }
@@ -163,8 +173,7 @@ public class Main {
                 continue;
             }
             if (socket.isClosed() || !socket.isConnected()) {
-                socket.close();
-                players.remove(player);
+                if (player != null) API.removePlayer(player);
             }
         }
 
