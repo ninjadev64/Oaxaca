@@ -168,7 +168,8 @@ public class Main {
                     break;
                 }
             } catch (IOException e) {
-                break;
+                e.printStackTrace();
+                continue;
             } catch (NegativeArraySizeException e) {
                 continue;
             }
