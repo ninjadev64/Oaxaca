@@ -1,40 +1,23 @@
 package com.amansprojects.oaxaca.entitymetadata;
 
 public class Living extends Entity {
-    public boolean isHandActive;
-    public boolean activeHand = false; // false for main hand, true for offhand
+    public String nameTag;
+    public boolean alwaysShowNameTag;
     public float health;
     public int potionEffectColor;
     public boolean isPotionEffectAmbient;
     public int numberOfArrows;
+    public boolean hasAi;
 
-    public Living(boolean onFire, boolean crouching, boolean sprinting, boolean invisible, boolean glowingEffect, boolean flyingWithElytra,
-                  boolean isHandActive, boolean activeHand, float health, int potionEffectColor, boolean isPotionEffectAmbient, int numberOfArrows) {
-        super(onFire, crouching, sprinting, invisible, glowingEffect, flyingWithElytra);
-        this.isHandActive = isHandActive;
-        this.activeHand = activeHand;
+    public Living(boolean onFire, boolean crouched, boolean sprinting, boolean eating, boolean blocking, boolean drinking, boolean invisible, short air,
+                  String nameTag, boolean alwaysShowNameTag, float health, int potionEffectColor, boolean isPotionEffectAmbient, int numberOfArrows, boolean hasAi) {
+        super(onFire, crouched, sprinting, eating, blocking, drinking, invisible, air);
+        this.nameTag = nameTag;
+        this.alwaysShowNameTag = alwaysShowNameTag;
         this.health = health;
         this.potionEffectColor = potionEffectColor;
         this.isPotionEffectAmbient = isPotionEffectAmbient;
         this.numberOfArrows = numberOfArrows;
-    }
-
-    public Living(boolean onFire, boolean crouching, boolean sprinting, boolean invisible, boolean glowingEffect, boolean flyingWithElytra,
-                  int air, String customName, boolean isCustomNameVisible, boolean isSilent, boolean noGravity,
-                  boolean isHandActive, boolean activeHand, float health, int potionEffectColor, boolean isPotionEffectAmbient, int numberOfArrows) {
-        super(onFire, crouching, sprinting, invisible, glowingEffect, flyingWithElytra, air, customName, isCustomNameVisible, isSilent, noGravity);
-        this.isHandActive = isHandActive;
-        this.activeHand = activeHand;
-        this.health = health;
-        this.potionEffectColor = potionEffectColor;
-        this.isPotionEffectAmbient = isPotionEffectAmbient;
-        this.numberOfArrows = numberOfArrows;
-    }
-
-    public byte getHandBitMask() {
-        byte value = 0;
-        if (isHandActive) value = (byte)(value | 0x01);
-        if (activeHand) value = (byte)(value | 0x02);
-        return value;
+        this.hasAi = hasAi;
     }
 }

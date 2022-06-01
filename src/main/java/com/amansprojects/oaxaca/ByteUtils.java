@@ -102,4 +102,10 @@ public class ByteUtils {
     public static float getAngle(float o360) {
         return ((360/o360)*256);
     }
+
+    public static void writeVarIntToOutputStream(int value, ByteArrayOutputStream out) {
+        ByteBuffer buffer = ByteBuffer.allocate(checkVarIntSize(value));
+        writeVarInt(value, buffer);
+        out.writeBytes(buffer.array());
+    }
 }

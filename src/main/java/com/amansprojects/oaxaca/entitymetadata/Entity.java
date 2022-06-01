@@ -2,51 +2,21 @@ package com.amansprojects.oaxaca.entitymetadata;
 
 public class Entity {
     public boolean onFire;
-    public boolean crouching;
+    public boolean crouched;
     public boolean sprinting;
+    public boolean eating; public boolean blocking; public boolean drinking;
     public boolean invisible;
-    public boolean glowingEffect;
-    public boolean flyingWithElytra;
 
-    public int air = 300;
-    public String customName = "";
-    public boolean isCustomNameVisible = false;
-    public boolean isSilent = false;
-    public boolean noGravity = false;
+    public short air;
 
-    public Entity(boolean onFire, boolean crouching, boolean sprinting, boolean invisible, boolean glowingEffect, boolean flyingWithElytra) {
+    public Entity(boolean onFire, boolean crouched, boolean sprinting, boolean eating, boolean blocking, boolean drinking, boolean invisible, short air) {
         this.onFire = onFire;
-        this.crouching = crouching;
+        this.crouched = crouched;
         this.sprinting = sprinting;
+        this.eating = eating;
+        this.blocking = blocking;
+        this.drinking = drinking;
         this.invisible = invisible;
-        this.glowingEffect = glowingEffect;
-        this.flyingWithElytra = flyingWithElytra;
-    }
-
-    public Entity(boolean onFire, boolean crouching, boolean sprinting, boolean invisible, boolean glowingEffect, boolean flyingWithElytra,
-                  int air, String customName, boolean isCustomNameVisible, boolean isSilent, boolean noGravity) {
-        this.onFire = onFire;
-        this.crouching = crouching;
-        this.sprinting = sprinting;
-        this.invisible = invisible;
-        this.glowingEffect = glowingEffect;
-        this.flyingWithElytra = flyingWithElytra;
-
         this.air = air;
-        this.customName = customName;
-        this.isCustomNameVisible = isCustomNameVisible;
-        this.isSilent = isSilent;
-        this.noGravity = noGravity;
-    }
-
-    public byte getStatusBitMask() {
-        byte value = 0;
-        if (onFire) value = (byte) (value | 0x01);
-        if (crouching) value = (byte) (value | 0x02);
-        if (sprinting) value = (byte) (value | 0x08);
-        if (invisible) value = (byte) (value | 0x20);
-        if (glowingEffect) value = (byte) (value | 0x40);
-        if (flyingWithElytra) value = (byte) (value | 0x80);
-        return value;
     }
 }
