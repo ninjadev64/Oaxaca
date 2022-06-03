@@ -73,7 +73,7 @@ public class Main {
                 input.read(dat);
                 try {
                     switch (dat[0]) {
-                        case 0x00 -> { // bad indentation but overall it's more readable without one extra level
+                        case 0x00 -> {
                             switch (state) {
                                 case HANDSHAKING -> { // Client sent a handshake
                                     switch (new HandshakePacket(dat).nextState) {
@@ -171,7 +171,7 @@ public class Main {
                     break;
                 }
             } catch (SocketException e) {
-                e.printStackTrace();
+                if (player != null) API.removePlayer(player);
                 break;
             } catch (IOException e) {
                 e.printStackTrace();

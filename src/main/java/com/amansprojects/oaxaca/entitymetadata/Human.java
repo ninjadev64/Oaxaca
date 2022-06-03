@@ -46,10 +46,10 @@ public class Human extends Living {
         if (leftPantsLegEnabled) skinFlags |= 0x10;
         if (rightPantsLegEnabled) skinFlags |= 0x20;
         if (hatEnabled) skinFlags |= 0x40;
-        dos.writeByte(skinFlags);
-        dos.writeByte(0);
-        dos.writeFloat(absorptionHearts);
-        dos.writeInt(score);
+        dos.writeByte(MetadataFormat.BYTE.getByte(10)); dos.writeByte(skinFlags);
+        dos.writeByte(MetadataFormat.BYTE.getByte(16)); dos.writeByte(0);
+        dos.writeByte(MetadataFormat.FLOAT.getByte(17)); dos.writeFloat(absorptionHearts);
+        dos.writeByte(MetadataFormat.INT.getByte(18)); dos.writeInt(score);
 
         return baos.toByteArray();
     }

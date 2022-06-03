@@ -34,9 +34,9 @@ public class Entity {
         if (sprinting) statusBitMask |= 0x08;
         if (eating || blocking || drinking) statusBitMask |= 0x10;
         if (invisible) statusBitMask |= 0x20;
-        dos.writeByte(statusBitMask);
+        dos.writeByte(MetadataFormat.BYTE.getByte(0)); dos.writeByte(statusBitMask);
 
-        dos.writeShort(air);
+        dos.writeByte(MetadataFormat.SHORT.getByte(1)); dos.writeShort(air);
         return baos.toByteArray();
     }
 }
