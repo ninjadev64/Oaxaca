@@ -16,11 +16,11 @@ public class Human extends Living {
     public float absorptionHearts = 0;
     public int score = 0;
 
-    public Human(boolean onFire, boolean crouched, boolean sprinting, boolean eating, boolean blocking, boolean drinking, boolean invisible, short air,
+    public Human(boolean onFire, boolean crouched, boolean sprinting, boolean eating, boolean blocking, boolean drinking, boolean invisible, short air, boolean silent,
                  String nameTag, boolean alwaysShowNameTag, float health, int potionEffectColor, boolean isPotionEffectAmbient, int numberOfArrows, boolean hasAi,
                  boolean capeEnabled, boolean jacketEnabled, boolean leftSleeveEnabled, boolean rightSleeveEnabled, boolean leftPantsLegEnabled, boolean rightPantsLegEnabled, boolean hatEnabled,
                  float absorptionHearts, int score) {
-        super(onFire, crouched, sprinting, eating, blocking, drinking, invisible, air, nameTag, alwaysShowNameTag, health, potionEffectColor, isPotionEffectAmbient, numberOfArrows, hasAi);
+        super(onFire, crouched, sprinting, eating, blocking, drinking, invisible, air, silent, nameTag, alwaysShowNameTag, health, potionEffectColor, isPotionEffectAmbient, numberOfArrows, hasAi);
         this.capeEnabled = capeEnabled;
         this.jacketEnabled = jacketEnabled;
         this.leftSleeveEnabled = leftSleeveEnabled;

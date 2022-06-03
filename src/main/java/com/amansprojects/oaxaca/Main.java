@@ -111,8 +111,11 @@ public class Main {
                                     // Now send them Player Position and Look to get them past "Downloading terrain"
                                     new PlayerPositionAndLookPacketOut(player.position).send(socket);
 
-                                    // Update everyone's player list
-                                    for (Player p : players) new PlayerListItemPacket(players).send(p.socket);
+                                    // Update everyone's player list and make them visible
+                                    for (Player p : players) {
+                                        new PlayerListItemPacket(players).send(p.socket);
+                                        new SpawnPlayerPacket(player).send(p.socket);
+                                    }
 
                                     // Send "joined the game" message
                                     ChatObject joined = new ChatObject();

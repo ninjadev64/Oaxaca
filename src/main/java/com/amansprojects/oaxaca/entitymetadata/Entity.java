@@ -12,8 +12,9 @@ public class Entity {
     public boolean invisible;
 
     public short air;
+    public boolean silent;
 
-    public Entity(boolean onFire, boolean crouched, boolean sprinting, boolean eating, boolean blocking, boolean drinking, boolean invisible, short air) {
+    public Entity(boolean onFire, boolean crouched, boolean sprinting, boolean eating, boolean blocking, boolean drinking, boolean invisible, short air, boolean silent) {
         this.onFire = onFire;
         this.crouched = crouched;
         this.sprinting = sprinting;
@@ -22,6 +23,7 @@ public class Entity {
         this.drinking = drinking;
         this.invisible = invisible;
         this.air = air;
+        this.silent = silent;
     }
 
     public byte[] getFull() throws IOException {
@@ -37,6 +39,7 @@ public class Entity {
         dos.writeByte(MetadataFormat.BYTE.getByte(0)); dos.writeByte(statusBitMask);
 
         dos.writeByte(MetadataFormat.SHORT.getByte(1)); dos.writeShort(air);
+        dos.writeByte(MetadataFormat.BYTE.getByte(4)); dos.writeByte(silent ? 1 : 0);
         return baos.toByteArray();
     }
 }

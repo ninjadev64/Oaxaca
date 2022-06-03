@@ -15,9 +15,9 @@ public class Living extends Entity {
     public int numberOfArrows;
     public boolean hasAi;
 
-    public Living(boolean onFire, boolean crouched, boolean sprinting, boolean eating, boolean blocking, boolean drinking, boolean invisible, short air,
+    public Living(boolean onFire, boolean crouched, boolean sprinting, boolean eating, boolean blocking, boolean drinking, boolean invisible, short air, boolean silent,
                   String nameTag, boolean alwaysShowNameTag, float health, int potionEffectColor, boolean isPotionEffectAmbient, int numberOfArrows, boolean hasAi) {
-        super(onFire, crouched, sprinting, eating, blocking, drinking, invisible, air);
+        super(onFire, crouched, sprinting, eating, blocking, drinking, invisible, air, silent);
         this.nameTag = nameTag;
         this.alwaysShowNameTag = alwaysShowNameTag;
         this.health = health;
