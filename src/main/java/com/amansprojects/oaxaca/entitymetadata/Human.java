@@ -1,5 +1,9 @@
 package com.amansprojects.oaxaca.entitymetadata;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class Human extends Living {
     public boolean capeEnabled = false;
     public boolean jacketEnabled = false;
@@ -26,5 +30,27 @@ public class Human extends Living {
         this.hatEnabled = hatEnabled;
         this.absorptionHearts = absorptionHearts;
         this.score = score;
+    }
+
+    @Override
+    public byte[] getFull() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+
+        baos.writeBytes(super.getFull());
+        byte skinFlags = 0;
+        if (capeEnabled) skinFlags |= 0x01;
+        if (jacketEnabled) skinFlags |= 0x02;
+        if (leftSleeveEnabled) skinFlags |= 0x04;
+        if (rightSleeveEnabled) skinFlags |= 0x08;
+        if (leftPantsLegEnabled) skinFlags |= 0x10;
+        if (rightPantsLegEnabled) skinFlags |= 0x20;
+        if (hatEnabled) skinFlags |= 0x40;
+        dos.writeByte(skinFlags);
+        dos.writeByte(0);
+        dos.writeFloat(absorptionHearts);
+        dos.writeInt(score);
+
+        return baos.toByteArray();
     }
 }

@@ -1,5 +1,11 @@
 package com.amansprojects.oaxaca.entitymetadata;
 
+import com.amansprojects.oaxaca.ByteUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class Living extends Entity {
     public String nameTag;
     public boolean alwaysShowNameTag;
@@ -19,5 +25,22 @@ public class Living extends Entity {
         this.isPotionEffectAmbient = isPotionEffectAmbient;
         this.numberOfArrows = numberOfArrows;
         this.hasAi = hasAi;
+    }
+
+    @Override
+    public byte[] getFull() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+
+        baos.writeBytes(super.getFull());
+        ByteUtils.writeStringToOutputStream(nameTag, baos);
+        dos.writeByte(alwaysShowNameTag ? 1 : 0);
+        dos.writeFloat(health);
+        dos.writeInt(potionEffectColor);
+        dos.writeByte(isPotionEffectAmbient ? 1 : 0);
+        dos.writeByte(numberOfArrows);
+        dos.writeByte(hasAi ? 1 : 0);
+
+        return baos.toByteArray();
     }
 }

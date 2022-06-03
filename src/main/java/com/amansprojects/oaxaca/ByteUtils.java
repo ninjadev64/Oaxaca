@@ -108,4 +108,10 @@ public class ByteUtils {
         writeVarInt(value, buffer);
         out.writeBytes(buffer.array());
     }
+
+    public static void writeStringToOutputStream(String value, ByteArrayOutputStream out) {
+        ByteBuffer buffer = ByteBuffer.allocate(checkVarIntSize(value.length()) + value.length());
+        writeString(value, buffer);
+        out.writeBytes(buffer.array());
+    }
 }
