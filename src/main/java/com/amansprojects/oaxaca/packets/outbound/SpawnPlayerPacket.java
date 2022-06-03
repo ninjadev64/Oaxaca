@@ -20,6 +20,8 @@ public class SpawnPlayerPacket implements OutboundPacket {
     @Override
     public void send(Socket socket) throws IOException {
         PacketWriter writer = new PacketWriter();
+        writer.writeByte((byte) 0x0C);
+
         writer.writeVarInt(player.eid);
         writer.writeByteArray(ByteBuffer.allocate(Long.BYTES).putLong(player.uuid.getMostSignificantBits()).array());
         writer.writeByteArray(ByteBuffer.allocate(Long.BYTES).putLong(player.uuid.getLeastSignificantBits()).array());
