@@ -34,6 +34,7 @@ public class SpawnPlayerPacket implements OutboundPacket {
 
         Human human = new Human(false, false, false, false, false, false, false, (short) 10, false, player.username, false, 20, 0, false, 0, false, true, true, true, true, true, true, true, 0f, 10);
         writer.writeByteArray(human.getFull());
+        writer.writeByte((byte) 127);
 
         Main.socketWrite(socket, writer.finish());
     }

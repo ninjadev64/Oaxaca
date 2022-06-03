@@ -86,7 +86,7 @@ public class Main {
 
                                     Yaml yaml = new Yaml(); // Yaml is not thread-safe so a new instance is needed for every connection
                                     Map<String, Object> config = yaml.load(new FileInputStream("server.yml"));
-                                    StatusResponsePacket statusResponsePacket = new StatusResponsePacket((int) config.get("maxPlayers"), 5, (ArrayList<String>) config.get("motd"));
+                                    StatusResponsePacket statusResponsePacket = new StatusResponsePacket((int) config.get("maxPlayers"), players.size(), (ArrayList<String>) config.get("motd"));
 
                                     statusResponsePacket.send(socket);
                                 }
@@ -187,7 +187,6 @@ public class Main {
             }
         }
 
-        // OutputStream output = socket.getOutputStream();
         socket.close();
     }
 
