@@ -1,5 +1,6 @@
 package com.amansprojects.oaxaca;
 
+import com.amansprojects.oaxaca.entitymetadata.Human;
 import com.amansprojects.oaxaca.packets.outbound.KeepAlivePacket;
 
 import java.net.Socket;
@@ -13,6 +14,7 @@ public class Player {
 
     public Gamemode gamemode;
     public Position position;
+    public Human metadata;
 
     public KeepAlivePacket lastSentKeepAlive;
 
@@ -24,5 +26,26 @@ public class Player {
 
         this.gamemode = gamemode;
         this.position = position;
+
+        this.metadata = new Human(
+            false, // on fire
+            false, // crouched
+            false, // sprinting
+            false, false, false, // eating, blocking, drinking
+            false, // invisible
+            (short) 10, // air
+            false, // silent
+            username, // name tag
+            true, // always show name tag
+            20, // health
+            0, // potion effect colour
+            false, // is potion effect ambient
+            0, // number of arrows
+            false, // has ai
+            true, true, true, true, true, true, true,
+            // cape enabled, jacket enabled, left sleeve enabled, right sleeve enabled, left pants leg enabled, right pants leg enabled, hat enabled
+            0, // absorption hearts
+            0 // score
+        );
     }
 }
