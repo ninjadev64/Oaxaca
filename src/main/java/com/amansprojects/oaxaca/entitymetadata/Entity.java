@@ -39,7 +39,7 @@ public class Entity {
         dos.writeByte(MetadataFormat.BYTE.getByte(0)); dos.writeByte(statusBitMask);
 
         dos.writeByte(MetadataFormat.SHORT.getByte(1)); dos.writeShort(air);
-        dos.writeByte(MetadataFormat.BYTE.getByte(4)); dos.writeByte(silent ? 1 : 0);
+        dos.writeByte(MetadataFormat.BYTE.getByte(4)); dos.writeBoolean(silent);
         return baos.toByteArray();
     }
 }

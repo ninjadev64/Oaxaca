@@ -34,12 +34,12 @@ public class Living extends Entity {
 
         baos.writeBytes(super.getFull());
         dos.writeByte(MetadataFormat.STRING.getByte(2)); ByteUtils.writeStringToOutputStream(nameTag, baos);
-        dos.writeByte(MetadataFormat.BYTE.getByte(3)); dos.writeByte(alwaysShowNameTag ? 1 : 0);
+        dos.writeByte(MetadataFormat.BYTE.getByte(3)); dos.writeBoolean(alwaysShowNameTag);
         dos.writeByte(MetadataFormat.FLOAT.getByte(6)); dos.writeFloat(health);
         dos.writeByte(MetadataFormat.INT.getByte(7)); dos.writeInt(potionEffectColor);
-        dos.writeByte(MetadataFormat.BYTE.getByte(8)); dos.writeByte(isPotionEffectAmbient ? 1 : 0);
+        dos.writeByte(MetadataFormat.BYTE.getByte(8)); dos.writeBoolean(isPotionEffectAmbient);
         dos.writeByte(MetadataFormat.BYTE.getByte(9)); dos.writeByte(numberOfArrows);
-        dos.writeByte(MetadataFormat.BYTE.getByte(15)); dos.writeByte(hasAi ? 1 : 0);
+        dos.writeByte(MetadataFormat.BYTE.getByte(15)); dos.writeBoolean(hasAi);
 
         return baos.toByteArray();
     }

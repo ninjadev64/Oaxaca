@@ -7,7 +7,6 @@ import com.amansprojects.oaxaca.PacketWriter;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 
 public class JoinGamePacket implements OutboundPacket {
     final int entityID;
@@ -33,7 +32,7 @@ public class JoinGamePacket implements OutboundPacket {
     public void send(Socket socket) throws IOException {
         PacketWriter writer = new PacketWriter();
         writer.writeByte((byte) 0x01);
-        writer.writeByteArray(ByteBuffer.allocate(4).putInt(entityID).array());
+        writer.writeInt(entityID);
         writer.writeByte(gamemode.get());
         writer.writeByte(dimension);
         writer.writeByte(difficulty);

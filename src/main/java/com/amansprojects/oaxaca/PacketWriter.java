@@ -41,7 +41,8 @@ public class PacketWriter {
     }
 
     public void writeInt(int i) {
-        baos.write(i);
+        try { dos.writeInt(i); }
+        catch (IOException e) { e.printStackTrace(); }
     }
 
     public void writeDouble(double d) {
