@@ -16,7 +16,7 @@ public class KeepAlivePacket implements OutboundPacket {
         PacketWriter writer = new PacketWriter();
 
         writer.writeByte((byte) 0x00);
-        writer.writeInt(data);
+        writer.writeVarInt(data);
 
         Main.socketWrite(socket, writer.finish());
     }

@@ -114,7 +114,7 @@ public class Main {
                                     // Update everyone's player list and make them visible
                                     for (Player p : players) {
                                         new PlayerListItemPacket(players).send(p.socket);
-                                        new SpawnPlayerPacket(player).send(p.socket);
+                                        if (p != player) new SpawnPlayerPacket(player).send(p.socket);
                                     }
 
                                     // Send "joined the game" message

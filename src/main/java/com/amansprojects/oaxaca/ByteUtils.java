@@ -100,7 +100,7 @@ public class ByteUtils {
     }
 
     public static float getAngle(float o360) {
-        return ((360/o360)*256);
+        return o360 == 0 ? 0 : ((360/o360)*256);
     }
 
     public static void writeVarIntToOutputStream(int value, ByteArrayOutputStream out) {
