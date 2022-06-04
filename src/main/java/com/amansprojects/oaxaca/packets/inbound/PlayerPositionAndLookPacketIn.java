@@ -12,7 +12,6 @@ public class PlayerPositionAndLookPacketIn extends InboundPacket {
         super(d);
         ByteBuffer packetBuffer = ByteBuffer.wrap(d); packetBuffer.position(1);
         position = new Position(packetBuffer.getDouble(), packetBuffer.getDouble(), packetBuffer.getDouble(), packetBuffer.getFloat(), packetBuffer.getFloat());
-        byte oG = packetBuffer.get();
-        onGround = oG >= 1;
+        onGround = packetBuffer.get() >= 1;
     }
 }

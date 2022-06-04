@@ -33,8 +33,8 @@ public class JoinGamePacket implements OutboundPacket {
     public void send(Socket socket) throws IOException {
         PacketWriter writer = new PacketWriter();
         writer.writeByte((byte) 0x01);
-        writer.writeByte(gamemode.get());
         writer.writeByteArray(ByteBuffer.allocate(4).putInt(entityID).array());
+        writer.writeByte(gamemode.get());
         writer.writeByte(dimension);
         writer.writeByte(difficulty);
         writer.writeByte(maxPlayers);
