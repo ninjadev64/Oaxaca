@@ -10,6 +10,10 @@ public class PacketWriter {
     public ByteArrayOutputStream baos = new ByteArrayOutputStream();
     public DataOutputStream dos = new DataOutputStream(baos);
 
+    public PacketWriter(byte id) {
+        writeByte(id);
+    }
+
     public void writeByte(byte b) {
         baos.write(b);
     }

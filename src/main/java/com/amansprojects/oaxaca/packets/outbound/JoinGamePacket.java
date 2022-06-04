@@ -30,8 +30,7 @@ public class JoinGamePacket implements OutboundPacket {
 
     @Override
     public void send(Socket socket) throws IOException {
-        PacketWriter writer = new PacketWriter();
-        writer.writeByte((byte) 0x01);
+        PacketWriter writer = new PacketWriter((byte) 0x01);
         writer.writeInt(entityID);
         writer.writeByte(gamemode.get());
         writer.writeByte(dimension);

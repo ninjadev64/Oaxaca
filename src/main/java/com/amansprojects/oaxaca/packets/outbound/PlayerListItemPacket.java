@@ -19,8 +19,7 @@ public class PlayerListItemPacket implements OutboundPacket {
 
     @Override
     public void send(Socket socket) throws IOException {
-        PacketWriter writer = new PacketWriter();
-        writer.writeByte((byte) 0x38);
+        PacketWriter writer = new PacketWriter((byte) 0x38);
         writer.writeVarInt(action);
         writer.writeVarInt(players.size());
         for (Player p : players) {

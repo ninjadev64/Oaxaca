@@ -13,11 +13,8 @@ public class KeepAlivePacket implements OutboundPacket {
 
     @Override
     public void send(Socket socket) throws IOException {
-        PacketWriter writer = new PacketWriter();
-
-        writer.writeByte((byte) 0x00);
+        PacketWriter writer = new PacketWriter((byte) 0x00);
         writer.writeVarInt(data);
-
         Main.socketWrite(socket, writer.finish());
     }
 }

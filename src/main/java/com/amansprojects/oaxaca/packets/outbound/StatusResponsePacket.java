@@ -46,8 +46,7 @@ public class StatusResponsePacket implements OutboundPacket {
     public void send(Socket socket) throws IOException {
         String json = Main.gson.toJson(jsonResponse);
 
-        PacketWriter writer = new PacketWriter();
-        writer.writeByte((byte) 0x00);
+        PacketWriter writer = new PacketWriter((byte) 0x00);
         writer.writeString(json);
 
         Main.socketWrite(socket, writer.finish());

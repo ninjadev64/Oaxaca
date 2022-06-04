@@ -22,8 +22,7 @@ public class PlayerPositionAndLookPacketOut implements OutboundPacket {
 
     @Override
     public void send(Socket socket) throws IOException {
-        PacketWriter writer = new PacketWriter();
-        writer.writeByte((byte) 0x08);
+        PacketWriter writer = new PacketWriter((byte) 0x08);
         writer.writeDouble(position.x);
         writer.writeDouble(position.y);
         writer.writeDouble(position.z);

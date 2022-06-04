@@ -19,8 +19,7 @@ public class LoginSuccessPacket implements OutboundPacket {
 
     @Override
     public void send(Socket socket) throws IOException {
-        PacketWriter writer = new PacketWriter();
-        writer.writeByte((byte) 0x02);
+        PacketWriter writer = new PacketWriter((byte) 0x02);
 
         writer.writeString(uuid.toString());
         writer.writeString(name);
